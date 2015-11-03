@@ -8,19 +8,8 @@ function hsTradeVis() {
     radiusScale = 1, 
 	width = Math.min(parseInt(d3.select("body").style("width")) - sidebarWidth, maxWidth), 
 	diameter = width;
-
-	var pack = d3.layout.pack()
-			   .padding(1)
-			   .size([diameter - 2 * margin, diameter - 2 * margin])
-			   .value(function(d) { return d.size; })
 			   
 	var topShift = margin - 0.13* width;
-
-	var svg = d3.select("#vis").append("svg")
-			  .attr("width", diameter)
-			  .attr("height", diameter)
-	  	  	  .append("g")
-	  	  	  .attr("transform", "translate(" + margin + "," + topShift + ")");
 	  	  	  
 	var colourRanges = [
 		// {"depth": 1, "upper": "rgb(220, 134, 59)", "lower": "rgb(127, 147, 154)"}
@@ -140,7 +129,12 @@ function hsTradeVis() {
 	
 	// ----------------------------------------------------------------------------------------------
 	// Draw packed circles visualisation
-	function drawCircles(root) {
+	function drawCircles(svg, root) {
+		var pack = d3.layout.pack()
+				   .padding(1)
+				   .size([diameter - 2 * margin, diameter - 2 * margin])
+				   .value(function(d) { return d.size; });
+
 		var nodes = pack.nodes(root);
 		
 		var colour1 = setupColourScale(nodes, 1);
@@ -170,12 +164,20 @@ function hsTradeVis() {
 			code: d.Code, 
 			descriptor: d.Descriptor		
 		};
-	}, function(error, rows) {
+	}, function(error, rows) {	
 		// Parse the data into a tree
 		var root = convertTree(rows);
 		
+		// Remove loading indicator
+		d3.select("#vis").text(" ");
+		
 		// Draw
-		drawCircles(root);
+		var svg = d3.select("#vis").append("svg")
+			  .attr("width", diameter)
+			  .attr("height", diameter)
+	  	  	  .append("g")
+	  	  	  .attr("transform", "translate(" + margin + "," + topShift + ")");
+		drawCircles(svg, root);
 		
 		// Miscellaneous
 		d3.select("#vis").on("click", function() { clearInfo(this); });
