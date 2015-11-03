@@ -1,8 +1,59 @@
+@font-face {
+	font-family: Fira;
+	src: url('http://schiff.co.nz/fonts/FiraSans-Book.eot'); /* IE9 Compat Modes */
+	src: url('http://schiff.co.nz/fonts/FiraSans-Book.woff') format('woff'), url('http://schiff.co.nz/fonts/FiraSans-Book.ttf') format('truetype'); 
+	font-weight: normal;
+	text-rendering: optimizeLegibility;
+}
+
+@font-face {
+	font-family: Fira;
+	src: url('http://schiff.co.nz/fonts/FiraSans-Light.eot'); /* IE9 Compat Modes */
+	src: url('http://schiff.co.nz/fonts/FiraSans-Light.woff') format('woff'), url('http://schiff.co.nz/fonts/FiraSans-Light.ttf') format('truetype'); 
+	font-weight: 200;
+	text-rendering: optimizeLegibility;
+}
+
+@font-face {
+	font-family: Fira;
+	src: url('http://schiff.co.nz/fonts/FiraSans-SemiBold.eot'); /* IE9 Compat Modes */
+	src: url('http://schiff.co.nz/fonts/FiraSans-SemiBold.woff') format('woff'), url('http://schiff.co.nz/fonts/FiraSans-SemiBold.ttf') format('truetype');
+	font-weight: bold;
+	text-rendering: optimizeLegibility;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
   width: 100%;
+  font-family: Fira, Helvetica, Arial, Sans-Serif;
+}
+
+h1 {
+  font-weight: 200;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1em;
+  margin: 0;
+  color: red;
+}
+
+p {
+  line-height: 1.5;
+}
+
+ul {
+  margin: 0.5em 0 0 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+li {
+  margin: 0 0 1em 0;
+  line-height: 1.5;
 }
 
 .node {
