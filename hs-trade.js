@@ -21,6 +21,11 @@ function hsTradeVis() {
 			  .attr("height", diameter)
 	  	  	  .append("g")
 	  	  	  .attr("transform", "translate(" + margin + "," + topShift + ")");
+	  	  	  
+	var colourRanges = [
+		// {"depth": 1, "upper": "rgb(220, 134, 59)", "lower": "rgb(127, 147, 154)"}
+		{"depth": 1, "upper": "blue", "lower": "green"}
+	];
 	
 	// ----------------------------------------------------------------------------------------------
 	// Convert raw data to tree structure
@@ -115,17 +120,30 @@ function hsTradeVis() {
 	};
 	
 	// ----------------------------------------------------------------------------------------------
+	// Set up colour scale function for given depth
+	function setupColourScale(nodes, depth) {
+		var subnodes = nodes.filter(function(d) {
+			return d.depth == depth;
+		});
+		
+		var range = colourRanges.filter(function(d) {
+			return d.depth == depth;
+		});
+		
+		var colour = d3.scale.linear()
+					 .domain(d3.extent(subnodes, function(d) { return d.r; }))
+					 .range([range[0].lower, range[0].upper])
+					 .interpolate(d3.interpolateHcl);
+					 
+		return colour;
+	}
+	
+	// ----------------------------------------------------------------------------------------------
 	// Draw packed circles visualisation
 	function drawCircles(root) {
 		var nodes = pack.nodes(root);
 		
-		var subnodes = nodes.filter(function(d) {
-			return d.depth == 1;
-		});
-		var colour = d3.scale.linear()
-    				.domain(d3.extent(subnodes, function(d) { return d.r; }))
-    				.range(["red", "white"])
-   					.interpolate(d3.interpolateHcl);
+		var colour1 = setupColourScale(nodes, 1);
 		
 		var circle = svg.selectAll("circle")
       				 .data(nodes)
@@ -136,8 +154,8 @@ function hsTradeVis() {
 			         .attr("cy", function(d) { return d.y; })
 			         .style("fill", function(d) {
 			         	if (d.depth == 1) {
-			         		return colour(d.r);
-			         	} else {
+			         		return colour1(d.r);
+						} else { 
 			         		return null;
 			         	}
 			         })

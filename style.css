@@ -30,6 +30,11 @@ body {
   font-family: Fira, Helvetica, Arial, Sans-Serif;
 }
 
+a, a:visited {
+	text-decoration: none;
+	color: rgb(220, 134, 59);
+}
+
 h1 {
   font-weight: 200;
   line-height: 1.2;
@@ -61,7 +66,7 @@ li {
 }
 
 .node:hover {
-  stroke: blue;
+  stroke: black;
   stroke-width: 1.5px;
 }
 
@@ -70,13 +75,11 @@ li {
 }
 
 .depth-1 {
-  stroke: rgba(0, 0, 0, 0.75);
-  stroke-width: 1px;
-  fill: rgba(0, 0, 0, 0.15);
+
 }
 
 .depth-2 {
-  fill: blue;
+  fill: rgb(110, 200, 90);
 }
 
 .depth-3 {
