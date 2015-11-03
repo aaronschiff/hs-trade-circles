@@ -5,6 +5,9 @@ body {
   width: 100%;
 }
 
+.node {
+  cursor: pointer;
+}
 
 .node:hover {
   stroke: blue;
@@ -12,23 +15,31 @@ body {
 }
 
 .depth-0 {
-  fill: orange;
+  fill: none;
 }
 
 .depth-1 {
-  fill: grey;
+  fill: rgba(0, 0, 0, 0.15);
+  stroke: rgba(0, 0, 0, 0.75);
+  stroke-width: 1px;
+  
 }
 
 .depth-2 {
-  fill: blue;
-}
-
-.depth-3 {
   fill: black;
 }
 
-.depth-4 {
+.depth-3 {
   fill: white;
+}
+
+.depth-4 {
+  fill: black;
+}
+
+.selected {
+  stroke: red !important;
+  stroke-width: 2px !important;
 }
 
 .node--root,

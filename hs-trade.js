@@ -3,10 +3,10 @@ function hsTradeVis() {
 	// ----------------------------------------------------------------------------------------------
 	// Setup
 	var margin = 10,
-    padding = 1,
     sidebarWidth = 350, 
     maxWidth = 1600, 
     minWidth = 1000,
+    radiusScale = 1, 
 	width = Math.max(Math.min(parseInt(d3.select("body").style("width")), maxWidth), minWidth), 
 	diameter = width - sidebarWidth;
 	
@@ -14,7 +14,7 @@ function hsTradeVis() {
 	d3.select("body").style("width", overallWidth + "px");
 
 	var pack = d3.layout.pack()
-			   .padding(padding)
+			   .padding(1)
 			   .size([diameter - 2 * margin, diameter - 2 * margin])
 			   .value(function(d) { return d.size; })
 			   
@@ -80,12 +80,23 @@ function hsTradeVis() {
 	
 	// ----------------------------------------------------------------------------------------------
 	// Show info for clicked circle
-	function showInfo(node) {
+	function showInfo(node, clicked) {
+		if (d3.select(clicked).classed("selected")) {
+			// Node is already selected, so just deselect it
+			d3.select(clicked).classed("selected", false);
+			d3.select("#info-title").text("");
+			d3.selectAll("#info-list").selectAll("li").remove();
+		} else {
+			// Show info for this node
 			d3.select("#info-title").text(node.name);
-			
+		
+			// Handle selection class
+			d3.selectAll(".selected").classed("selected", false);
+			d3.select(clicked).classed("selected", true);
+		
 			// Clear the children list
 			d3.select("#info-list").selectAll("li").remove();	
-		
+	
 			// List all direct children of this node
 			if (node.children) {
 				d3.select("#info-list").selectAll("li")
@@ -94,6 +105,10 @@ function hsTradeVis() {
 					.append("li")
 					.text(function(d) { return d.name; });
 			}
+		}
+		
+		// d3.event.stopPropagation();
+		d3.event.preventDefault();
 	}
 	
 	// ----------------------------------------------------------------------------------------------
@@ -105,10 +120,10 @@ function hsTradeVis() {
       				 .data(nodes)
  				     .enter().append("circle")
 			         .attr("class", function(d) { return d.parent ? d.children ? "node depth-" + d.depth : "node node--leaf depth-" + d.depth : "node node--root depth-" + d.depth; })
-			         .attr("r", function(d) { return d.r; })
+			         .attr("r", function(d) { return radiusScale * d.r; })
 			         .attr("cx", function(d) { return d.x; })
 			         .attr("cy", function(d) { return d.y; })
-      				 .on("click", function(d) { showInfo(d) });
+      				 .on("click", function(d) { showInfo(d, this) });
       	
       	d3.select(self.frameElement).style("height", diameter + "px");
 	}
