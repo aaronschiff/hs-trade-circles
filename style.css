@@ -70,14 +70,13 @@ li {
 }
 
 .depth-1 {
-  fill: rgba(0, 0, 0, 0.15);
   stroke: rgba(0, 0, 0, 0.75);
   stroke-width: 1px;
-  
+  fill: rgba(0, 0, 0, 0.15);
 }
 
 .depth-2 {
-  fill: black;
+  fill: blue;
 }
 
 .depth-3 {
@@ -99,11 +98,10 @@ li {
 }
 
 #vis {
-  float: left;
+  float: right;
 }
 
 #sidebar {
-  float: left;
-  width: 300px;
-  padding-right: 50px;
+  width: 330px;
+  padding-left: 20px;
 }

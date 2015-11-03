@@ -5,31 +5,22 @@ function hsTradeVis() {
 	var margin = 10,
     sidebarWidth = 350, 
     maxWidth = 1600, 
-    minWidth = 1000,
     radiusScale = 1, 
-	width = Math.max(Math.min(parseInt(d3.select("body").style("width")), maxWidth), minWidth), 
-	diameter = width - sidebarWidth;
-	
-	var overallWidth = width + sidebarWidth;
-	d3.select("body").style("width", overallWidth + "px");
+	width = Math.min(parseInt(d3.select("body").style("width")) - sidebarWidth, maxWidth), 
+	diameter = width;
 
 	var pack = d3.layout.pack()
 			   .padding(1)
 			   .size([diameter - 2 * margin, diameter - 2 * margin])
 			   .value(function(d) { return d.size; })
 			   
-	var topShift = margin - 0.08 * width;
+	var topShift = margin - 0.13* width;
 
 	var svg = d3.select("#vis").append("svg")
 			  .attr("width", diameter)
 			  .attr("height", diameter)
 	  	  	  .append("g")
 	  	  	  .attr("transform", "translate(" + margin + "," + topShift + ")");
-			  
-	var colour = d3.scale.linear()
-    			.domain([-1, 5])
-    			.range(["hsl(150,0%,100%)", "hsl(150,0%,0%)"])
-   				.interpolate(d3.interpolateHcl);
 	
 	// ----------------------------------------------------------------------------------------------
 	// Convert raw data to tree structure
@@ -79,19 +70,28 @@ function hsTradeVis() {
 	};
 	
 	// ----------------------------------------------------------------------------------------------
+	// Clear info area
+	function clearInfo(clicked) {
+		d3.selectAll("circle.selected").classed("selected", false);
+		d3.select("#info-title").text("");
+		d3.selectAll("#info-list").selectAll("li").remove();
+		
+		d3.event.stopPropagation();
+		d3.event.preventDefault();
+	};
+	
+	// ----------------------------------------------------------------------------------------------
 	// Show info for clicked circle
 	function showInfo(node, clicked) {
 		if (d3.select(clicked).classed("selected")) {
 			// Node is already selected, so just deselect it
-			d3.select(clicked).classed("selected", false);
-			d3.select("#info-title").text("");
-			d3.selectAll("#info-list").selectAll("li").remove();
+			clearInfo(clicked);
 		} else {
 			// Show info for this node
-			d3.select("#info-title").text(node.name);
+			d3.select("#info-title").text(node.name + " [" + node.code + "]");
 		
 			// Handle selection class
-			d3.selectAll(".selected").classed("selected", false);
+			d3.selectAll("circle.selected").classed("selected", false);
 			d3.select(clicked).classed("selected", true);
 		
 			// Clear the children list
@@ -99,22 +99,33 @@ function hsTradeVis() {
 	
 			// List all direct children of this node
 			if (node.children) {
+				children = node.children.sort(function(a, b){
+					return a.code - b.code;
+				});
 				d3.select("#info-list").selectAll("li")
-					.data(node.children)
+					.data(children)
 					.enter()
 					.append("li")
-					.text(function(d) { return d.name; });
+					.text(function(d) { return d.name + " [" + d.code + "]"; });
 			}
 		}
 		
-		// d3.event.stopPropagation();
+		d3.event.stopPropagation();
 		d3.event.preventDefault();
-	}
+	};
 	
 	// ----------------------------------------------------------------------------------------------
 	// Draw packed circles visualisation
 	function drawCircles(root) {
 		var nodes = pack.nodes(root);
+		
+		var subnodes = nodes.filter(function(d) {
+			return d.depth == 1;
+		});
+		var colour = d3.scale.linear()
+    				.domain(d3.extent(subnodes, function(d) { return d.r; }))
+    				.range(["red", "white"])
+   					.interpolate(d3.interpolateHcl);
 		
 		var circle = svg.selectAll("circle")
       				 .data(nodes)
@@ -123,10 +134,17 @@ function hsTradeVis() {
 			         .attr("r", function(d) { return radiusScale * d.r; })
 			         .attr("cx", function(d) { return d.x; })
 			         .attr("cy", function(d) { return d.y; })
+			         .style("fill", function(d) {
+			         	if (d.depth == 1) {
+			         		return colour(d.r);
+			         	} else {
+			         		return null;
+			         	}
+			         })
       				 .on("click", function(d) { showInfo(d, this) });
       	
       	d3.select(self.frameElement).style("height", diameter + "px");
-	}
+	};
 	
 	// Load data and go! 
 	d3.tsv("nzhsc.tsv", function(d) {
@@ -140,6 +158,10 @@ function hsTradeVis() {
 		
 		// Draw
 		drawCircles(root);
+		
+		// Miscellaneous
+		d3.select("#vis").on("click", function() { clearInfo(this); });
+		d3.select("body").on("dblclick", function() { console.log("ya"); d3.event.stopPropagation(); d3.event.preventDefault(); } );
 		
 	});
 }
