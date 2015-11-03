@@ -68,7 +68,7 @@ function hsTradeVis() {
 	function clearInfo(clicked) {
 		d3.selectAll("circle.selected").classed("selected", false);
 		d3.select("#info-title").text("");
-		d3.selectAll("#info-list").selectAll("li").remove();
+		d3.select("#info-list").selectAll("li").remove();
 		
 		d3.event.stopPropagation();
 		d3.event.preventDefault();
@@ -88,10 +88,10 @@ function hsTradeVis() {
 			d3.selectAll("circle.selected").classed("selected", false);
 			d3.select(clicked).classed("selected", true);
 		
-			// Clear the children list
-			d3.select("#info-list").selectAll("li").remove();	
-	
-			// List all direct children of this node
+ 			// Clear the children list
+ 			d3.select("#info-list").selectAll("li").remove();	
+ 	
+ 			// List all direct children of this node
 			if (node.children) {
 				children = node.children.sort(function(a, b){
 					return a.code - b.code;
@@ -101,7 +101,7 @@ function hsTradeVis() {
 					.enter()
 					.append("li")
 					.text(function(d) { return d.name + " [" + d.code + "]"; });
-			}
+ 			}
 		}
 		
 		d3.event.stopPropagation();
@@ -169,7 +169,7 @@ function hsTradeVis() {
 		var root = convertTree(rows);
 		
 		// Remove loading indicator
-		d3.select("#vis").text(" ");
+		d3.select("#loading").remove();
 		
 		// Draw
 		var svg = d3.select("#vis").append("svg")
@@ -184,6 +184,6 @@ function hsTradeVis() {
 		d3.select("body").on("dblclick", function() { console.log("ya"); d3.event.stopPropagation(); d3.event.preventDefault(); } );
 		
 	});
-}
+};
 
 hsTradeVis();

@@ -102,6 +102,11 @@ li {
 
 #vis {
   float: right;
+  overflow: auto;
+}
+
+#loading {
+  padding: 1.5em 0 0 0;
 }
 
 #sidebar {
