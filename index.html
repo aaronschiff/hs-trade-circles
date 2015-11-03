@@ -7,18 +7,21 @@
 </head>
 
 <body>
-<div id="header">
+<div id="vis"> </div>
+<div id="sidebar">
 	<h1>Harmonised trade categories</h1>
 	<p>This visualisation shows the structure of 
 	<a href="http://www.stats.govt.nz/methods/classifications-and-standards/classification-related-stats-standards/harmonised-system-2012.aspx">
 	NZHSC 2012</a>. </p>
-	<p>Click a circle to see the name of the category</p>
-</div>
-
-<div id="vis">
-
+	<p>Click a circle to see the name of the category and the sub-categories that it directly contains.</p>
+	
+	<div id="info">
+		<h2 id="info-title"></h2>
+		<ul id="info-list"></ul>
+	</div>
 </div>
 
 <script type="text/javascript" src="hs-trade.js"></script>
+<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 </body>
 </html>

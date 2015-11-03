@@ -1,7 +1,47 @@
 html,
 body {
-  height: 100%;
+  margin: 0;
+  padding: 0;
   width: 100%;
-  overflow: hidden;
 }
 
+
+.node:hover {
+  stroke: blue;
+  stroke-width: 1.5px;
+}
+
+.depth-0 {
+  fill: orange;
+}
+
+.depth-1 {
+  fill: grey;
+}
+
+.depth-2 {
+  fill: blue;
+}
+
+.depth-3 {
+  fill: black;
+}
+
+.depth-4 {
+  fill: white;
+}
+
+.node--root,
+.node--leaf {
+  pointer-events: none;
+}
+
+#vis {
+  float: left;
+}
+
+#sidebar {
+  float: left;
+  width: 300px;
+  padding-right: 50px;
+}
