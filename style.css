@@ -103,6 +103,7 @@ li {
 #vis {
   float: right;
   overflow: auto;
+  text-align: left;
 }
 
 #loading {
